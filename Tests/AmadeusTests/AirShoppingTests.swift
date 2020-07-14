@@ -2,6 +2,7 @@
 import SwiftyJSON
 import XCTest
 
+
 class AirShoppingTests: XCTestCase {
     var amadeus: Amadeus!
     
@@ -11,7 +12,7 @@ class AirShoppingTests: XCTestCase {
         // Avoid 429 error "Network rate limit is exceeded"
         sleep(1)
         
-        amadeus = Amadeus(environment: ["logLevel": "debug"])
+        amadeus = Amadeus()
     }
     
     override func tearDown() {
@@ -19,33 +20,62 @@ class AirShoppingTests: XCTestCase {
         super.tearDown()
     }
     
+    func testFlightOffersSearchGet() {
+         let expectation = XCTestExpectation(description: "TimeOut")
+
+        let params: AmadeusParameter = ["originLocationCode": "BER",
+                       "destinationLocationCode": "SFO",
+                       "departureDate": "2020-08-16",
+                       "returnDate": "2020-09-30",
+                       "adults": 4,
+                       "nonStop": false,
+                       "maxPrice": 1000]
+         
+         amadeus.shopping.flightOffersSearch.get(parameters: params, onCompletion: {
+             result in
+             switch result {
+             case .success(let response):
+                 print(type(of:response))
+                 print(response.data[0].itineraries[0].segments[0].arrival.iataCode)
+                 //print(response.dictionaries!.aircraft)
+             case .failure(let error):
+                 print(error.localizedDescription)
+             }
+             expectation.fulfill()
+         })
+
+         wait(for: [expectation], timeout: 60)
+     }
+    
+    func testFlightInspirationSearch() {
+         let expectation = XCTestExpectation(description: "TimeOut")
+
+        let params: AmadeusParameter = ["origin": "MAD",
+                                        "maxPrice": 200]
+         
+        amadeus.shopping.flightDestinations.get(parameters: params, onCompletion: {
+             result in
+             switch result {
+             case .success(let response):
+                
+                 print(type(of:response))
+                 print(response.data[0].origin)
+             case .failure(let error):
+                 print(error.localizedDescription)
+             }
+             expectation.fulfill()
+         })
+
+         wait(for: [expectation], timeout: 60)
+     }
+}
+
+    /*
     func testFlightDestinations() {
         let expectation = XCTestExpectation(description: "TimeOut")
         
         amadeus.shopping.flightDestinations.get(params: ["origin": "MAD",
                                                          "maxPrice": "500"], onCompletion: {
-                                                            result in
-                                                            switch result {
-                                                            case .success(let response):
-                                                                XCTAssertEqual(response.statusCode, 200)
-                                                            case .failure(let error):
-                                                                fatalError(error.localizedDescription)
-                                                            }
-                                                            expectation.fulfill()
-        })
-        
-        wait(for: [expectation], timeout: 60)
-    }
-    
-    
-    func testFlightOffersSearchGet() {
-        let expectation = XCTestExpectation(description: "TimeOut")
-        
-        amadeus.shopping.flightOffersSearch.get(params: ["originLocationCode": "MAD",
-                                                         "destinationLocationCode": "BER",
-                                                         "departureDate": "2020-05-16",
-                                                         "returnDate": "2020-05-30",
-                                                         "adults": "2"], onCompletion: {
                                                             result in
                                                             switch result {
                                                             case .success(let response):
@@ -633,3 +663,4 @@ class AirShoppingTests: XCTestCase {
     }
     
 }
+ */

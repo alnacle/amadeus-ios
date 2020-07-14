@@ -2,6 +2,7 @@
 import SwiftyJSON
 import XCTest
 
+/*
 class AirBookingTests: XCTestCase {
     var amadeus: Amadeus!
 
@@ -19,6 +20,7 @@ class AirBookingTests: XCTestCase {
         super.tearDown()
     }
 
+    
     func testFlightOrderRetrieve() {
         let expectation = XCTestExpectation(description: "TimeOut")
 
@@ -544,6 +546,8 @@ class AirBookingTests: XCTestCase {
         wait(for: [expectation], timeout: 60)
     }
 
+    
 }
+ */
 
  

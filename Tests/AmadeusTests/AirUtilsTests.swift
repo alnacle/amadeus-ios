@@ -1,8 +1,8 @@
 @testable import Amadeus
-import SwiftyJSON
 import XCTest
 
 class AirUtilsTests: XCTestCase {
+    
     var amadeus: Amadeus!
 
     override func setUp() {
@@ -11,7 +11,7 @@ class AirUtilsTests: XCTestCase {
         // Avoid 429 error "Network rate limit is exceeded"
         sleep(1)
 
-        amadeus = Amadeus(environment: ["logLevel": "debug"])
+        amadeus = Amadeus()
     }
 
     override func tearDown() {
@@ -19,15 +19,56 @@ class AirUtilsTests: XCTestCase {
         super.tearDown()
     }
 
+    func testAirLines() {
+        let expectation = XCTestExpectation(description: "")
+        
+        let params = ["airlineCodes": "BA"]
+        
+        amadeus.referenceData.airLines.get(parameters: params, onCompletion: {
+            result in
+            switch result {
+            case .success(let response):
+                print(type(of:response))
+                print(response.data[0].businessName)
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+            expectation.fulfill()
+        })
+
+        wait(for: [expectation], timeout: 60)
+    }
+    
+
    func testCheckinLinks() {
         let expectation = XCTestExpectation(description: "TimeOut")
 
-        amadeus.referenceData.urls.checkinLinks.get(params: ["airlineCode": "BA"],
-                                                    onCompletion: { result in
+        let params = ["airlineCode": "AF"]
+        
+        amadeus.referenceData.urls.checkinLinks.get(parameters: params, onCompletion: {
+            result in
             switch result {
             case .success(let response):
-                print(response.data)
-                XCTAssertEqual(response.statusCode, 200)
+                print(type(of:response))
+                print(response.data[0].channel)
+                print(response.data[1].id)
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+            expectation.fulfill()
+        })
+
+        wait(for: [expectation], timeout: 60)
+    }
+
+    func testAirportCitySearchById() {
+        let expectation = XCTestExpectation(description: "TimeOut")
+        
+        amadeus.referenceData.location(locationId: "CMUC").get(onCompletion: {
+            result in
+            switch result {
+            case .success(let response):
+                print(type(of:response))
             case .failure(let error):
                 fatalError(error.localizedDescription)
             }
@@ -36,7 +77,30 @@ class AirUtilsTests: XCTestCase {
 
         wait(for: [expectation], timeout: 60)
     }
+    
+    func testAirportCitySearch() {
+        let expectation = XCTestExpectation(description: "TimeOut")
+        
+        let params: AmadeusParameter = [
+            "subType" : "CITY",
+            "keyword" : "LON"
+        ]
+        
+        amadeus.referenceData.locations.get(parameters: params, onCompletion: {
+                result in
+                switch result {
+                case .success(let response):
+                    print(type(of:response))
+                case .failure(let error):
+                    fatalError(error.localizedDescription)
+                }
+                expectation.fulfill()
+        })
 
+        wait(for: [expectation], timeout: 60)
+    }
+    
+    /*
     func testAirportNearestRelevant() {
         let expectation = XCTestExpectation(description: "TimeOut")
 
@@ -67,59 +131,6 @@ class AirUtilsTests: XCTestCase {
 
         wait(for: [expectation], timeout: 60)
     }
+*/
 
-    func testAirportCitySearch() {
-        let expectation = XCTestExpectation(description: "TimeOut")
-
-        amadeus.referenceData.locations.get(params: ["subType": "AIRPORT,CITY",
-                                                   "keyword": "lon"], onCompletion: {
-                result in
-                switch result {
-                case .success(let response):
-                    print(response.data)
-                    XCTAssertEqual(response.statusCode, 200)
-                case .failure(let error):
-                    fatalError(error.localizedDescription)
-                }
-                expectation.fulfill()
-        })
-
-        wait(for: [expectation], timeout: 60)
-    }
-
-    func testAirportCitySearchById() {
-        let expectation = XCTestExpectation(description: "TimeOut")
-
-        amadeus.referenceData.location(locationId: "CMUC").get(params: [:], onCompletion: {
-            result in
-            switch result {
-            case .success(let response):
-                print(response.data)
-                XCTAssertEqual(response.statusCode, 200)
-            case .failure(let error):
-                fatalError(error.localizedDescription)
-            }
-            expectation.fulfill()
-        })
-
-        wait(for: [expectation], timeout: 60)
-    }
-
-    func testAirLines() {
-        let expectation = XCTestExpectation(description: "TimeOut")
-
-        amadeus.referenceData.airLines.get(params: ["airlineCodes": "BA"], onCompletion: {
-            result in
-            switch result {
-            case .success(let response):
-                print(response.data)
-                XCTAssertEqual(response.statusCode, 200)
-            case .failure(let error):
-                fatalError(error.localizedDescription)
-            }
-            expectation.fulfill()
-        })
-
-        wait(for: [expectation], timeout: 60)
-    }
 }

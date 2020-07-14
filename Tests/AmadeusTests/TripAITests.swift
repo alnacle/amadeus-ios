@@ -2,6 +2,7 @@
 import SwiftyJSON
 import XCTest
 
+/*
 class TripAITests: XCTestCase {
     var amadeus: Amadeus!
     
@@ -18,6 +19,7 @@ class TripAITests: XCTestCase {
         amadeus = nil
         super.tearDown()
     }
+    
     
     func testTripPurposePrediction() {
         let expectation = XCTestExpectation(description: "TimeOut")
@@ -62,4 +64,4 @@ class TripAITests: XCTestCase {
         wait(for: [expectation], timeout: 60)
     }
 }
-
+*/

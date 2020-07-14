@@ -1,22 +1,46 @@
 @testable import Amadeus
 import XCTest
-import SwiftyJSON
 
-class HotelTests: XCTestCase {
+
+class HotelShoppoingTest: XCTestCase {
+
     var amadeus: Amadeus!
-    
+
     override func setUp() {
         super.setUp()
-        
-        // Avoid 429 error "Network rate limit is exceeded
+
+        // Avoid 429 error "Network rate limit is exceeded"
         sleep(1)
-        amadeus = Amadeus(environment: ["logLevel": "debug"])
+
+        amadeus = Amadeus()
     }
-    
+
     override func tearDown() {
         amadeus = nil
         super.tearDown()
     }
+    
+    func testHotelSearch() {
+         let expectation = XCTestExpectation(description: "TimeOut")
+
+        let params: AmadeusParameter = ["cityCode": "BER"]
+         
+         amadeus.shopping.hotelOffers.get(parameters: params, onCompletion: {
+             result in
+             switch result {
+             case .success(let response):
+                 print(type(of:response))
+             case .failure(let error):
+                 print(error.localizedDescription)
+             }
+             expectation.fulfill()
+         })
+
+         wait(for: [expectation], timeout: 60)
+     }
+}
+
+/*
     
     func testHotelOffers() {
         let expectation = XCTestExpectation(description: "TimeOut")
@@ -154,3 +178,4 @@ class HotelTests: XCTestCase {
     }
     
 }
+*/

@@ -1,7 +1,7 @@
 @testable import Amadeus
-import SwiftyJSON
 import XCTest
 
+/*
 class AirTravelInsightsTests: XCTestCase {
     var amadeus: Amadeus!
     
@@ -77,5 +77,5 @@ class AirTravelInsightsTests: XCTestCase {
         
         wait(for: [expectation], timeout: 60)
     }
-    
 }
+ */

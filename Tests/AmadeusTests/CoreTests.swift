@@ -1,6 +1,7 @@
 @testable import Amadeus
 import XCTest
 
+/*
 class CoreTests: XCTestCase {
     var client: Amadeus!
 
@@ -57,3 +58,4 @@ class CoreTests: XCTestCase {
         XCTAssertEqual(conf.port, 8080)
     }
 }
+*/

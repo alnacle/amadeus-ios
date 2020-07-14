@@ -3,6 +3,7 @@
 import XCTest
 import SwiftyJSON
 
+/*
 class DestinationContentTests: XCTestCase {
     var amadeus: Amadeus!
     
@@ -18,6 +19,7 @@ class DestinationContentTests: XCTestCase {
         amadeus = nil
         super.tearDown()
     }
+    
     
     func testPointsOfInterestSearch() {
         let expectation = XCTestExpectation(description: "TimeOut")
@@ -81,4 +83,5 @@ class DestinationContentTests: XCTestCase {
         wait(for: [expectation], timeout: 60)
     }
 }
+ */
 
